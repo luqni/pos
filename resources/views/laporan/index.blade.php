@@ -30,6 +30,7 @@
                         <th>Pembelian</th>
                         <th>Pengeluaran</th>
                         <th>Pendapatan</th>
+                        <th>Keuntungan</th>
                     </thead>
                 </table>
             </div>
@@ -60,7 +61,8 @@
                 {data: 'penjualan'},
                 {data: 'pembelian'},
                 {data: 'pengeluaran'},
-                {data: 'pendapatan'}
+                {data: 'pendapatan'},
+                {data:  'keuntungan'}
             ],
             dom: 'Brt',
             bSort: false,

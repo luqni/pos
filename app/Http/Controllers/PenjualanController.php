@@ -6,6 +6,7 @@ use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
 use App\Models\Produk;
 use App\Models\Setting;
+use App\Models\Laba;
 use Illuminate\Http\Request;
 use PDF;
 
@@ -92,6 +93,15 @@ class PenjualanController extends Controller
             $produk = Produk::find($item->id_produk);
             $produk->stok -= $item->jumlah;
             $produk->update();
+            
+            $laba = new Laba();
+            $laba->id_penjualan = $penjualan->id_penjualan;
+            $laba->id_produk = $item->id_produk;
+            $harga_jual_akhir = $produk->harga_jual - ($produk->harga_jual * $produk->diskon);
+            $laba_bersih = $harga_jual_akhir - $produk->harga_beli;
+            $laba->laba_bersih = $laba_bersih * $request->total_item;
+            $laba->save();
+
         }
 
         return redirect()->route('transaksi.selesai');

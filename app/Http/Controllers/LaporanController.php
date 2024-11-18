@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pembelian;
 use App\Models\Pengeluaran;
 use App\Models\Penjualan;
+use App\Models\Laba;
 use Illuminate\Http\Request;
 use PDF;
 
@@ -29,6 +30,7 @@ class LaporanController extends Controller
         $data = array();
         $pendapatan = 0;
         $total_pendapatan = 0;
+        $total_laba = 0;
 
         while (strtotime($awal) <= strtotime($akhir)) {
             $tanggal = $awal;
@@ -37,9 +39,11 @@ class LaporanController extends Controller
             $total_penjualan = Penjualan::where('created_at', 'LIKE', "%$tanggal%")->sum('bayar');
             $total_pembelian = Pembelian::where('created_at', 'LIKE', "%$tanggal%")->sum('bayar');
             $total_pengeluaran = Pengeluaran::where('created_at', 'LIKE', "%$tanggal%")->sum('nominal');
+            $total_keuntungan = Laba::where('created_at', 'LIKE', "%$tanggal%")->sum('laba_bersih');
 
             $pendapatan = $total_penjualan - $total_pembelian - $total_pengeluaran;
             $total_pendapatan += $pendapatan;
+            $total_laba += $total_keuntungan;
 
             $row = array();
             $row['DT_RowIndex'] = $no++;
@@ -48,6 +52,7 @@ class LaporanController extends Controller
             $row['pembelian'] = format_uang($total_pembelian);
             $row['pengeluaran'] = format_uang($total_pengeluaran);
             $row['pendapatan'] = format_uang($pendapatan);
+            $row['keuntungan'] = format_uang($total_keuntungan);
 
             $data[] = $row;
         }
@@ -59,6 +64,7 @@ class LaporanController extends Controller
             'pembelian' => '',
             'pengeluaran' => 'Total Pendapatan',
             'pendapatan' => format_uang($total_pendapatan),
+            'keuntungan' => format_uang($total_laba)
         ];
 
         return $data;

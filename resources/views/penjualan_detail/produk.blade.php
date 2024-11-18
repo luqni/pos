@@ -6,7 +6,7 @@
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Pilih Produk</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body table-responsive">
                 <table class="table table-striped table-bordered table-produk">
                     <thead>
                         <th width="5%">No</th>

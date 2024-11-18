@@ -157,6 +157,7 @@
             processing: true,
             serverSide: true,
             autoWidth: false,
+            scrollX: true,
             ajax: {
                 url: '{{ route('transaksi.data', $id_penjualan) }}',
             },
