@@ -88,6 +88,9 @@ Menjalankan aplikasi
 php artisan serve
 ```
 
+## Catatan Tambahan
+- untuk tabel penjualan_detail ada perubahan type data yang belum masuk ke migration file yaitu perubahan type data kolom jumlah dari int ke double
+
 ## Link Tutorial
 
 - [Youtube](https://www.youtube.com/playlist?list=PLaN75JfoGz0Okf9f_7GbGM5IFaLXWx-_C)

@@ -185,13 +185,13 @@
 
         $(document).on('input', '.quantity', function () {
             let id = $(this).data('id');
-            let jumlah = parseInt($(this).val());
-
-            if (jumlah < 1) {
-                $(this).val(1);
-                alert('Jumlah tidak boleh kurang dari 1');
-                return;
-            }
+            let jumlah = parseFloat($(this).val());
+            
+            // if (jumlah < 0.1) {
+            //     $(this).val(0.5);
+            //     alert('Jumlah tidak boleh kurang dari 0.5');
+            //     return;
+            // }
             if (jumlah > 10000) {
                 $(this).val(10000);
                 alert('Jumlah tidak boleh lebih dari 10000');
