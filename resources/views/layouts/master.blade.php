@@ -85,6 +85,9 @@
     <!-- Validator -->
     <script src="{{ asset('js/validator.min.js') }}"></script>
 
+    <!-- qrcode scanner library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+
     <script>
         function preview(selector, temporaryFile, width = 200)  {
             $(selector).empty();

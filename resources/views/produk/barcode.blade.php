@@ -18,10 +18,10 @@
             @foreach ($dataproduk as $produk)
                 <td class="text-center" style="border: 1px solid #333;">
                     <p>{{ $produk->nama_produk }} - Rp. {{ format_uang($produk->harga_jual) }}</p>
-                    <img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($produk->kode_produk, 'C39') }}" 
-                        alt="{{ $produk->kode_produk }}"
-                        width="180"
-                        height="60">
+                   <img src="data:image/png;base64,{{ DNS2D::getBarcodePNG($produk->id_produk . ',' . $produk->kode_produk, 'QRCODE') }}" 
+                    alt="{{ $produk->kode_produk }}"
+                    width="200"
+                    height="200">
                     <br>
                     {{ $produk->kode_produk }}
                 </td>

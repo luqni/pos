@@ -41,7 +41,13 @@
     <div class="col-lg-12">
         <div class="box">
             <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div id="reader"></div>
+                    </div>
                     
+                </div>
+                <br/>
                 <form class="form-produk">
                     @csrf
                     <div class="form-group row">
@@ -289,6 +295,7 @@
                 })
                 .done((response) => {
                     table.ajax.reload(() => loadForm($('#diskon').val()));
+                    scannedDataSet.clear();
                 })
                 .fail((errors) => {
                     alert('Tidak dapat menghapus data');
@@ -320,5 +327,36 @@
                 return;
             })
     }
+
+    // Set untuk menyimpan data yang sudah dipindai
+    let scannedDataSet = new Set();
+
+    function onScanSuccess(decodedText, decodedResult) {
+        // Pisahkan data menjadi array
+        let data = decodedText.split(",");
+        
+        console.log(data);
+
+        // Cek apakah data sudah pernah dipindai
+        if (scannedDataSet.has(decodedText)) {
+            console.log("Data sudah dipindai sebelumnya:", decodedText);
+            return; // Tidak memproses ulang
+        }
+
+        // Tambahkan data ke dalam Set
+        scannedDataSet.add(decodedText);
+
+        // Proses data
+        $('#id_produk').val(data[0]);
+        $('#kode_produk').val(data[1]);
+
+        tambahProduk(); // Fungsi untuk memproses produk
+    }
+
+        const html5QrCodeScanner = new Html5QrcodeScanner("reader", {
+            fps: 10,
+            qrbox: 250
+        });
+        html5QrCodeScanner.render(onScanSuccess);
 </script>
 @endpush
