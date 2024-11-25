@@ -28,6 +28,20 @@
             padding-top: 5px;
         }
     }
+
+    /* Spinner overlay */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: none; /* Default hidden */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
 </style>
 @endpush
 
@@ -37,14 +51,20 @@
 @endsection
 
 @section('content')
+<!-- Spinner Loading (Overlay) -->
+<div id="loading" class="overlay" style="display:none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
         <div class="box">
             <div class="box-body">
                 <div class="row">
-                    <div class="col-lg-5">
+                    <!-- <div class="col-lg-5">
                         <div id="reader"></div>
-                    </div>
+                    </div> -->
                     
                 </div>
                 <br/>
@@ -155,6 +175,17 @@
 <script>
     let table, table2;
 
+    // Menampilkan loading spinner
+    function showLoading() {
+        $('#loading').fadeIn(); // Menampilkan overlay spinner
+    }
+
+    // Menyembunyikan loading spinner
+    function hideLoading() {
+        $('#loading').fadeOut(); // Menyembunyikan overlay spinner
+    }
+
+
     $(function () {
         $('body').addClass('sidebar-collapse');
 
@@ -204,17 +235,21 @@
                 return;
             }
 
+            // Tampilkan spinner loading
+             showLoading();
+
             $.post(`{{ url('/transaksi') }}/${id}`, {
                     '_token': $('[name=csrf-token]').attr('content'),
                     '_method': 'put',
                     'jumlah': jumlah
                 })
                 .done(response => {
-                    $(this).on('mouseout', function () {
-                        table.ajax.reload(() => loadForm($('#diskon').val()));
-                    });
+                    // Sembunyikan spinner setelah request selesai
+                    hideLoading();
+                    table.ajax.reload(() => loadForm($('#diskon').val()));
                 })
                 .fail(errors => {
+                    hideLoading();
                     alert('Tidak dapat menyimpan data');
                     return;
                 });

@@ -99,7 +99,7 @@ class PenjualanController extends Controller
             $laba->id_produk = $item->id_produk;
             $harga_jual_akhir = $produk->harga_jual - ($produk->harga_jual * $produk->diskon);
             $laba_bersih = $harga_jual_akhir - $produk->harga_beli;
-            $laba->laba_bersih = $laba_bersih * $request->total_item;
+            $laba->laba_bersih = $laba_bersih * $item->jumlah;
             $laba->save();
 
         }
@@ -187,5 +187,41 @@ class PenjualanController extends Controller
         $pdf = PDF::loadView('penjualan.nota_besar', compact('setting', 'penjualan', 'detail'));
         $pdf->setPaper(0,0,609,440, 'potrait');
         return $pdf->stream('Transaksi-'. date('Y-m-d-his') .'.pdf');
+    }
+
+
+    public function updateDataLaba($id)
+    {
+        $laba = Laba::where('id_penjualan', $id)->get();
+
+        foreach ($laba as $item) {
+            // Ambil detail penjualan
+            $detail = PenjualanDetail::where('id_penjualan', $id)
+                                    ->where('id_produk', $item->id_produk)
+                                    ->first();
+
+            if (!$detail) {
+                continue; // Skip jika detail tidak ditemukan
+            }
+
+            // Ambil data produk
+            $produk = Produk::find($item->id_produk);
+
+            if (!$produk) {
+                continue; // Skip jika produk tidak ditemukan
+            }
+
+            // Hitung harga jual akhir (perhatikan diskon)
+            $diskon = $produk->diskon ?? 0; // Default diskon ke 0 jika null
+            $harga_jual_akhir = $produk->harga_jual - ($produk->harga_jual * $diskon);
+
+            // Hitung laba bersih
+            $laba_bersih = $harga_jual_akhir - $produk->harga_beli;
+
+            // Update laba bersih di model Laba
+            $item->laba_bersih = $laba_bersih * $detail->jumlah;
+            $item->update();
+        }
+
     }
 }
