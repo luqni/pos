@@ -71,12 +71,12 @@
                 <form class="form-produk">
                     @csrf
                     <div class="form-group row">
-                        <label for="kode_produk" class="col-lg-2">Kode Produk</label>
+                        <label for="kode_produk" class="col-lg-2">Nama Produk</label>
                         <div class="col-lg-5">
                             <div class="input-group">
                                 <input type="hidden" name="id_penjualan" id="id_penjualan" value="{{ $id_penjualan }}">
                                 <input type="hidden" name="id_produk" id="id_produk">
-                                <input type="text" class="form-control" name="kode_produk" id="kode_produk">
+                                <input type="text" class="form-control" name="nama_produk" id="nama_produk">
                                 <span class="input-group-btn">
                                     <button onclick="tampilProduk()" class="btn btn-info btn-flat" type="button"><i class="fa fa-arrow-right"></i></button>
                                 </span>
@@ -250,9 +250,43 @@
                 })
                 .fail(errors => {
                     hideLoading();
-                    alert('Tidak dapat menyimpan data');
+                    // alert('Tidak dapat menyimpan data');
+                    console.log('Tidak dapat menyimpan data');
                     return;
                 });
+        });
+
+        $(document).on('input', '.harga-jual', function () {
+            let id = $(this).data('id'); // Ambil data-id dari input
+            let newHargaJual = $(this).val(); // Ambil nilai baru dari input
+
+            // Validasi jika diperlukan
+            if (newHargaJual < 0) {
+                console.log('Harga jual tidak boleh kurang dari 0');
+                $(this).val(0); // Reset ke 0
+                return;
+            }
+
+             showLoading();
+
+            // Kirim data ke server
+            $.post(`{{ url('/transaksi') }}/${id}`, {
+                '_token': $('[name=csrf-token]').attr('content'),
+                '_method': 'put',
+                'harga_jual': newHargaJual
+            })
+            .done(response => {
+                console.log('Harga jual berhasil diperbarui');
+                hideLoading();
+                table.ajax.reload(() => loadForm($('#diskon').val()));
+                // Jika perlu, reload DataTables di sini
+                // table.ajax.reload(null, false);
+            })
+            .fail(error => {
+                 hideLoading();
+                console.log('Gagal memperbarui harga jual');
+                console.error(error);
+            });
         });
 
         $(document).on('input', '#diskon', function () {
@@ -286,9 +320,9 @@
         $('#modal-produk').modal('hide');
     }
 
-    function pilihProduk(id, kode) {
+    function pilihProduk(id, nama) {
         $('#id_produk').val(id);
-        $('#kode_produk').val(kode);
+        $('#nama_produk').val(nama);
         hideProduk();
         tambahProduk();
     }
@@ -300,7 +334,8 @@
                 table.ajax.reload(() => loadForm($('#diskon').val()));
             })
             .fail(errors => {
-                alert('Tidak dapat menyimpan data');
+                // alert('Tidak dapat menyimpan data');
+                console.log('Tidak dapat menyimpan data');
                 return;
             });
     }
