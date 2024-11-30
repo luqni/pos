@@ -64,11 +64,11 @@
                         <th width="5%">No</th>
                         <th>Kode</th>
                         <th>Nama</th>
-                        <th>Harga</th>
-                        <th width="15%">Jumlah</th>
+                        <th width="15%">Harga</th>
+                        <th >Jumlah</th>
                         <th>Diskon</th>
                         <th>Subtotal</th>
-                        <th width="15%"><i class="fa fa-cog"></i></th>
+                        <th ><i class="fa fa-cog"></i></th>
                     </thead>
                 </table>
 

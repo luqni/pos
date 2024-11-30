@@ -97,7 +97,7 @@ class PenjualanController extends Controller
             $laba = new Laba();
             $laba->id_penjualan = $penjualan->id_penjualan;
             $laba->id_produk = $item->id_produk;
-            $harga_jual_akhir = $produk->harga_jual - ($produk->harga_jual * $produk->diskon);
+            $harga_jual_akhir = $item->harga_jual - ($item->harga_jual * $produk->diskon);
             $laba_bersih = $harga_jual_akhir - $produk->harga_beli;
             $laba->laba_bersih = $laba_bersih * $request->total_item;
             $laba->save();

@@ -44,10 +44,10 @@ class PenjualanDetailController extends Controller
 
         foreach ($detail as $item) {
             $row = array();
-            $row['kode_produk'] = '<span class="label label-success">'. $item->produk['kode_produk'] .'</span';
+            $row['kode_produk'] = '<span class="label label-success">'. $item->produk['kode_produk'] .'</span>';
             $row['nama_produk'] = $item->produk['nama_produk'];
-            $row['harga_jual']  = 'Rp. '. format_uang($item->harga_jual);
-            $row['jumlah']      = '<input type="number" class="form-control input-sm quantity" data-id="'. $item->id_penjualan_detail .'" value="'. $item->jumlah .'" step="0.01">';
+            $row['harga_jual']  = '<input type="number" class="form-control input-sm harga-jual" data-id="'. $item->id_penjualan_detail .'" value="'. $item->harga_jual .'" style="min-width: 100px; max-width: 100%; width: 100%;">';
+            $row['jumlah']      = '<input type="number" class="form-control input-sm quantity" data-id="'. $item->id_penjualan_detail .'" value="'. $item->jumlah .'">';
             $row['diskon']      = $item->diskon . '%';
             $row['subtotal']    = 'Rp. '. format_uang($item->subtotal);
             $row['aksi']        = '<div class="btn-group">
@@ -98,10 +98,20 @@ class PenjualanDetailController extends Controller
 
     public function update(Request $request, $id)
     {
-        $detail = PenjualanDetail::find($id);
-        $detail->jumlah = $request->jumlah;
-        $detail->subtotal = $detail->harga_jual * $request->jumlah - (($detail->diskon * $request->jumlah) / 100 * $detail->harga_jual);;
-        $detail->update();
+        
+        if($request->harga_jual){
+
+            $detail = PenjualanDetail::find($id);
+            $detail->harga_jual = $request->harga_jual;
+            $detail->subtotal = $request->harga_jual * $detail->jumlah - (($detail->diskon * $detail->jumlah) / 100 * $request->harga_jual);
+            $detail->update();
+        }else{
+            $detail = PenjualanDetail::find($id);
+            $produk = Produk::find($detail->id_produk);
+            $detail->jumlah = $request->jumlah;
+            $detail->subtotal = $detail->harga_jual * $request->jumlah - (($detail->diskon * $request->jumlah) / 100 * $detail->harga_jual);
+            $detail->update();
+        }
     }
 
     public function destroy($id)
