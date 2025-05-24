@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kategori;
+use App\Imports\KategoriImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KategoriController extends Controller
 {
@@ -113,5 +115,16 @@ class KategoriController extends Controller
         $kategori->delete();
 
         return response(null, 204);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls',
+        ]);
+    
+        Excel::import(new KategoriImport, $request->file('file_excel'));
+
+        return response()->json('success', 'Data berhasil diimpor!', 200);
     }
 }

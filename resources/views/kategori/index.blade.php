@@ -15,6 +15,7 @@
         <div class="box">
             <div class="box-header with-border">
                 <button onclick="addForm('{{ route('kategori.store') }}')" class="btn btn-success btn-xs btn-flat"><i class="fa fa-plus-circle"></i> Tambah</button>
+                <button onclick="importExcel('{{ route('kategori.import') }}')" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Import Excel</button>
             </div>
             <div class="box-body table-responsive">
                 <table class="table table-stiped table-bordered">
@@ -30,6 +31,7 @@
 </div>
 
 @includeIf('kategori.form')
+@includeIf('kategori.import')
 @endsection
 
 @push('scripts')
@@ -110,6 +112,16 @@
                     return;
                 });
         }
+    }
+
+    function importExcel(url) {
+        $('#import-form').modal('show');
+        $('#import-form .modal-title').text('Import Kategori');
+
+        $('#import-form form')[0].reset();
+        $('#import-form form').attr('action', url);
+        $('#import-form [name=_method]').val('post');
+        $('#import-form [name=nama_produk]').focus();
     }
 </script>
 @endpush
