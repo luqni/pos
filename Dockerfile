@@ -1,9 +1,9 @@
 FROM php:8.2-fpm
 
-# Install dependencies
+# Install dependencies (tambahkan libpng dan gd)
 RUN apt-get update && apt-get install -y \
-    git unzip curl libzip-dev zip \
-    && docker-php-ext-install zip pdo pdo_mysql
+    git unzip curl libzip-dev zip libpng-dev libjpeg-dev libfreetype6-dev \
+    && docker-php-ext-install zip pdo pdo_mysql gd
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php && \
@@ -12,10 +12,10 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 # Set working directory
 WORKDIR /var/www
 
-# Copy all files
+# Copy project files
 COPY . .
 
-# Create necessary folders (prevent error)
+# Pastikan folder penting ada
 RUN mkdir -p storage bootstrap/cache
 
 # Install PHP dependencies
@@ -24,5 +24,5 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Laravel permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www/storage
 
-# Default command
+# Jalankan Laravel server
 CMD php artisan serve --host=0.0.0.0 --port=8000
