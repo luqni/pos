@@ -6,6 +6,8 @@ use App\Models\Kategori;
 use Illuminate\Http\Request;
 use App\Models\Produk;
 use PDF;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ProdukImport;
 
 class ProdukController extends Controller
 {
@@ -161,5 +163,17 @@ class ProdukController extends Controller
         $pdf = PDF::loadView('produk.barcode', compact('dataproduk', 'no'));
         $pdf->setPaper('a4', 'potrait');
         return $pdf->stream('produk.pdf');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file_excel'    => 'required|mimes:xlsx,xls',
+            'id_kategori'   => 'required',
+        ]);
+    
+        Excel::import(new ProdukImport($request->id_kategori), $request->file('file_excel'));
+
+        return null;
     }
 }
