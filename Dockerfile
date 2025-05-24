@@ -12,8 +12,11 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 # Set working directory
 WORKDIR /var/www
 
-# Copy project files
+# Copy all files
 COPY . .
+
+# Create necessary folders (prevent error)
+RUN mkdir -p storage bootstrap/cache
 
 # Install PHP dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
@@ -21,4 +24,5 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Laravel permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www/storage
 
+# Default command
 CMD php artisan serve --host=0.0.0.0 --port=8000
