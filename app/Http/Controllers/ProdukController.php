@@ -174,6 +174,6 @@ class ProdukController extends Controller
     
         Excel::import(new ProdukImport($request->id_kategori), $request->file('file_excel'));
 
-        return null;
+        return redirect()->route('produk.index')->with('success', 'Data berhasil diimpor');
     }
 }
